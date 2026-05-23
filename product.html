@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details - Emmanuel Super Store</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    
+    <style>
+        :root {
+            --primary-green: #27ae60;
+            --dark-text: #2d3436;
+            --light-grey: #f8f9fa;
+            --border-color: #eee;
+            --danger: #d63031;
+            --shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: #fff;
+            color: var(--dark-text);
+            line-height: 1.6;
+        }
+
+        /* NAVIGATION */
+        .nav-header {
+            padding: 15px 5%;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: var(--dark-text);
+            display: flex;
+            align-items: center; gap: 8px; font-weight: 600;
+        }
+
+        .cart-trigger { cursor: pointer; position: relative; display: flex; align-items: center; }
+
+        #cart-count {
+            position: absolute; top: -8px; right: -8px;
+            background: var(--primary-green); color: white;
+            font-size: 10px; padding: 2px 6px; border-radius: 50%;
+        }
+
+        /* CART SIDEBAR */
+        .cart-sidebar {
+            position: fixed; right: -400px; top: 0; width: 350px; height: 100%;
+            background: white; box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            z-index: 1000; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 20px; display: flex; flex-direction: column;
+        }
+
+        .cart-sidebar.open { right: 0; }
+
+        .cart-header {
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 2px solid var(--light-grey); padding-bottom: 15px;
+        }
+
+        #cart-items-list { flex-grow: 1; overflow-y: auto; margin-top: 20px; }
+
+        .cart-item-mini {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid var(--light-grey);
+        }
+
+        .delete-item { color: var(--danger); cursor: pointer; font-size: 18px; }
+
+        /* PRODUCT LAYOUT */
+        .product-page-wrapper {
+            max-width: 1200px; margin: 40px auto;
+            display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 50px; padding: 0 5%;
+        }
+
+        .main-img-container { background: var(--light-grey); border-radius: 20px; overflow: hidden; aspect-ratio: 1 / 1; }
+        .main-img-container img { width: 100%; height: 100%; object-fit: cover; }
+        .price-tag { font-size: 2rem; color: var(--primary-green); font-weight: 700; margin: 10px 0; }
+        .purchase-box { background: var(--light-grey); padding: 25px; border-radius: 15px; }
+        .qty-control { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+        .qty-btn { background: white; border: 1px solid var(--border-color); width: 40px; height: 40px; border-radius: 10px; cursor: pointer; font-weight: bold; }
+         
+       <div class="purchase-box">
+    <div style="margin-bottom: 15px;">
+        <label for="color-select" style="font-weight: bold; display: block; margin-bottom: 5px;">Pick a Color:</label>
+        <select id="color-select" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+            <option value="Black">Black</option>
+            <option value="Blue">Blue</option>
+            <option value="Red">Red</option>
+            <option value="Green">Green</option>
+        </select>
+    </div>
+
+    <div class="qty-control">
+        <span>Quantity:</span>
+        <button class="qty-btn" onclick="updateQty(-1)">-</button>
+        <span id="display-qty">1</span>
+        <button class="qty-btn" onclick="updateQty(1)">+</button>
+    </div>
+    <button class="add-to-cart-btn" onclick="addToCart()">Add to Cart</button>
+</div>
+
+        .add-to-cart-btn {
+            width: 100%; background: var(--primary-green); color: white; border: none; padding: 18px; 
+            border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.2s;
+        }
+        /* RELATED PRODUCTS */
+        .related-section { max-width: 1200px; margin: 60px auto; padding: 0 5%; }
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; margin-top: 20px; }
+        .product-card { border: 1px solid var(--border-color); padding: 15px; border-radius: 12px; text-align: center; transition: 0.3s; text-decoration: none; color: inherit; }
+        .product-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
+        .product-card img { width: 100%; height: 150px; object-fit: cover; border-radius: 8px; }
+
+        @media (max-width: 900px) {
+            .product-page-wrapper { grid-template-columns: 1fr; }
+            .cart-sidebar { width: 100%; right: -100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="cartSidebar" class="cart-sidebar">
+        <div class="cart-header">
+            <h3>Your Cart</h3>
+            <i class="material-icons" style="cursor:pointer" onclick="toggleCart()">close</i>
+        </div>
+
+        <div id="cart-items-list"></div>
+
+        <div class="cart-footer">
+            <hr>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <strong>Total: £<span id="cart-total-amt">0.00</span></strong>
+                <button onclick="clearCart()" style="background:none; border:none; color:var(--danger); cursor:pointer; display:flex; align-items:center; font-size:0.8rem; font-weight:bold;">
+                    <i class="material-icons" style="font-size:1.2rem;">delete_sweep</i> Clear All
+                </button>
+            </div>
+            
+            <a href="payment.html" 
+               onclick="return checkCartBeforeLeaving()" 
+               style="display: block; text-align: center; background: #27ae60; color: white; padding: 15px; border-radius: 10px; text-decoration: none; font-weight: bold;">
+               Proceed to Checkout
+            </a>
+        </div>
+    </div>
+
+    <header class="nav-header">
+        <a href="index.html" class="back-link">
+            <i class="material-icons">arrow_back</i> Emmanuel Store
+        </a>
+        <div class="cart-trigger" onclick="toggleCart()">
+            <i class="material-icons">shopping_cart</i>
+            <span id="cart-count">0</span>
+        </div>
+    </header>
+
+  
+
+
+    <main class="product-page-wrapper">
+        <section class="image-gallery">
+            <div class="main-img-container">
+                <img id="product-img" src="https://images.unsplash.com/photo-1550989460-0adf9ea622e2?auto=format&fit=crop&q=80&w=800" alt="Product">
+            </div>
+        </section>
+
+        <section class="info-card">
+            <h1 id="product-name" class="product-title">Loading...</h1>
+            <div class="price-tag">£<span id="product-price">0.00</span></div>
+
+            <div class="description-box">
+                <p>High-quality essentials sourced directly for Emmanuel Super Store. Freshness and quality guaranteed with every order.</p>
+            </div>
+
+            <div class="purchase-box">
+                <div class="qty-control">
+                    <span>Quantity:</span>
+                    <button class="qty-btn" onclick="updateQty(-1)">-</button>
+                    <span id="display-qty" style="font-weight:bold; min-width:20px; text-align:center;">1</span>
+                    <button class="qty-btn" onclick="updateQty(1)">+</button>
+                </div>
+                <button class="add-to-cart-btn" onclick="addToCart()">Add to Cart</button>
+            </div>
+            <button onclick="shareProduct()" style="margin-top: 15px; width: 100%; background: #f1f1f1; color: #333; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+    <i class="material-icons">share</i> Share with Friends
+</button>
+
+<p id="share-msg" style="display:none; color: var(--primary-green); font-size: 0.8rem; text-align: center; margin-top: 5px;">Link copied to clipboard!</p>
+        </section>
+    </main>
+
+    <section class="related-section">
+        <h2>Recommended for You</h2>
+        <div class="grid-container">
+            <a href="product.html?name=Fresh%20Apples&price=2.99" class="product-card">
+                <img src="https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=400" alt="Apples">
+                <h4>Fresh Apples</h4>
+                <p>£2.99</p>
+            </a>
+            <a href="product.html?name=Whole%20Milk&price=1.50" class="product-card">
+                <img src="https://images.unsplash.com/photo-1563636619-e9107da5a1bb?w=400" alt="Milk">
+                <h4>Whole Milk</h4>
+                <p>£1.50</p>
+            </a>
+            <a href="product.html?name=Fresh%20Bread&price=1.20" class="product-card">
+                <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400" alt="Bread">
+                <h4>Fresh Bread</h4>
+                <p>£1.20</p>
+            </a>
+              </a>
+            <a href="product.html?name=Fresh%20Bread&price=1.20" class="product-card">
+                <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400" alt="Bread">
+                <h4>Fresh Bread</h4>
+                <p>£1.20</p>
+                
+            </a>
+
+        </div>
+    </section>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const name = urlParams.get('name') || "Fresh Groceries";
+        const price = urlParams.get('price') || "4.99";
+
+        document.getElementById('product-name').innerText = name;
+        document.getElementById('product-price').innerText = price;
+
+        let currentQty = 1;
+        function updateQty(amount) {
+            currentQty += amount;
+            if(currentQty < 1) currentQty = 1;
+            document.getElementById('display-qty').innerText = currentQty;
+        }
+
+        function toggleCart() {
+            document.getElementById('cartSidebar').classList.toggle('open');
+            renderCart();
+        }
+
+        function addToCart() {
+            let cart = JSON.parse(localStorage.getItem('emmanuel_cart')) || [];
+            const product = { name, price: parseFloat(price), quantity: currentQty };
+            const idx = cart.findIndex(i => i.name === name);
+            if (idx > -1) cart[idx].quantity += currentQty;
+            else cart.push(product);
+            
+            localStorage.setItem('emmanuel_cart', JSON.stringify(cart));
+            renderCart();
+            document.getElementById('cartSidebar').classList.add('open');
+        }
+
+        function removeFromCart(itemName) {
+            let cart = JSON.parse(localStorage.getItem('emmanuel_cart')) || [];
+            cart = cart.filter(item => item.name !== itemName);
+            localStorage.setItem('emmanuel_cart', JSON.stringify(cart));
+            renderCart();
+        }
+
+        function clearCart() {
+            if(confirm("Empty your entire cart?")) {
+                localStorage.removeItem('emmanuel_cart');
+                renderCart();
+            }
+        }
+
+        // NEW: Check if cart has items before going to payment
+        function checkCartBeforeLeaving() {
+            const cart = JSON.parse(localStorage.getItem('emmanuel_cart')) || [];
+            if (cart.length === 0) {
+                alert("Your cart is empty!");
+                return false;
+            }
+            return true;
+        }
+
+        function renderCart() {
+            const cart = JSON.parse(localStorage.getItem('emmanuel_cart')) || [];
+            const list = document.getElementById('cart-items-list');
+            const count = document.getElementById('cart-count');
+            const totalElems = document.querySelectorAll('#cart-total-amt');
+            
+            list.innerHTML = "";
+            let totalVal = 0;
+            let totalItems = 0;
+
+            if(cart.length === 0) {
+                list.innerHTML = `<p style="text-align:center; color:#999; margin-top:30px;">Your cart is empty.</p>`;
+            }
+
+            cart.forEach(item => {
+                totalVal += item.price * item.quantity;
+                totalItems += item.quantity;
+                list.innerHTML += `
+                    <div class="cart-item-mini">
+                        <div>
+                            <span style="display:block; font-weight:bold;">${item.name}</span>
+                            <span style="font-size:0.8rem; color:#666;">£${item.price.toFixed(2)} x ${item.quantity}</span>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <strong>£${(item.price * item.quantity).toFixed(2)}</strong>
+                            <i class="material-icons delete-item" onclick="removeFromCart('${item.name}')">delete_outline</i>
+                        </div>
+                    </div>`;
+            });
+
+            count.innerText = totalItems;
+            totalElems.forEach(el => el.innerText = totalVal.toFixed(2));
+        }
+
+        window.onload = renderCart;
+        function shareProduct() {
+    const productName = document.getElementById('product-name').innerText;
+    const shareData = {
+        title: 'Check out this ' + productName + ' at Emmanuel Super Store!',
+        text: 'I found this ' + productName + ' and thought you might like it!',
+        url: window.location.href // This gets the current product link automatically
+    };
+
+    // Check if the browser supports native sharing (like on a phone)
+    if (navigator.share) {
+        navigator.share(shareData)
+            .then(() => console.log('Shared successfully'))
+            .catch((err) => console.log('Error sharing:', err));
+    } else {
+        // Fallback for Desktop: Copy link to clipboard
+        navigator.clipboard.writeText(shareData.url).then(() => {
+            const msg = document.getElementById('share-msg');
+            msg.style.display = 'block';
+            setTimeout(() => { msg.style.display = 'none'; }, 3000);
+        });
+    }
+    
+}
+        
+
+    </script>
+</body>
+</html>

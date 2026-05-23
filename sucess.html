@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Success | Emmanuel Store</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+<style>
+    .success-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    padding: 20px;
+}
+
+.success-card {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+}
+
+.success-icon i {
+    font-size: 80px;
+    color: #27ae60;
+    margin-bottom: 20px;
+}
+
+.order-info {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 20px 0;
+    border: 1px dashed #27ae60;
+}
+
+.summary-box {
+    text-align: left;
+    margin-bottom: 30px;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.summary-box ul {
+    list-style: none;
+    padding: 0;
+}
+
+.summary-box li {
+    padding: 5px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.success-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.receipt-container {
+    max-width: 400px;
+    margin: 20px auto;
+    background: #fff;
+    padding: 30px;
+    border: 1px solid #eee;
+    font-family: 'Courier New', Courier, monospace; /* Classic receipt font */
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+
+.receipt-header {
+    text-align: center;
+    border-bottom: 2px dashed #eee;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+
+.receipt-header span { color: #27ae60; }
+
+.receipt-total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.receipt-footer {
+    text-align: center;
+    font-size: 0.8rem;
+    color: #888;
+    margin-top: 20px;
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+}
+
+/* Hide button when printing the receipt */
+@media print {
+    .checkout-btn, .navbar, .main-footer {
+        display: none;
+    }
+}
+</style>
+<body>
+    <nav class="navbar">
+        <div class="logo">Emmanuel <span>Store</span></div>
+        <a href="index.html" class="standard-link">Back to Shop</a>
+    </nav>
+
+    <main class="success-container">
+        <div class="success-card">
+            <div class="success-icon">
+                <i class="material-icons">check_circle</i>
+            </div>
+            <h1>Order Confirmed!</h1>
+            <p>Thank you for shopping with us. Your order is being processed.</p>
+            
+            <div class="order-info">
+                <span>Order ID:</span>
+                <strong id="display-order-id">#ORD-0000</strong>
+            </div>
+
+            <div id="order-summary" class="summary-box">
+                </div>
+
+            <div class="success-actions">
+                <a href="you.html" class="checkout-btn">Track My Order</a>
+                <a href="index.html" class="clear-btn" style="text-decoration:none; display:inline-block; text-align:center;">Continue Shopping</a>
+            </div>
+        </div>
+        <div class="receipt-container" id="receipt">
+    <div class="receipt-header">
+        <h2>EMMANUEL<span>STORE</span></h2>
+        <p>Order Receipt</p>
+    </div>
+    
+    <div class="receipt-body">
+        <p><strong>Date:</strong> <span id="receipt-date"></span></p>
+        <p><strong>Order ID:</strong> <span id="receipt-id"></span></p>
+        <hr>
+        <div id="receipt-items">
+            </div>
+        <hr>
+        <div class="receipt-total">
+            <span>Total Paid:</span>
+            <span id="receipt-total-amount">£0.00</span>
+        </div>
+    </div>
+
+    <div class="receipt-footer">
+        <p>Thank you for your business!</p>
+        <p>If you have questions, contact us at <strong>support@emmanuelstore.com</strong></p>
+    </div>
+</div>
+
+<button class="checkout-btn" onclick="window.print()">Download PDF Receipt</button>
+    </main>
+
+    <script>
+        // ICT Logic: Retrieve the data we saved during checkout
+        document.addEventListener('DOMContentLoaded', () => {
+            const orderId = localStorage.getItem('last_order_id');
+            const cart = JSON.parse(localStorage.getItem('emmanuel_cart')) || [];
+            const summaryDiv = document.getElementById('order-summary');
+            
+            if(orderId) {
+                document.getElementById('display-order-id').innerText = orderId;
+            }
+
+            if(cart.length > 0) {
+                let html = '<h4>Items Purchased:</h4><ul>';
+                cart.forEach(item => {
+                    html += `<li>${item.name} (x${item.quantity}) - £${(item.price * item.quantity).toFixed(2)}</li>`;
+                });
+                html += '</ul>';
+                summaryDiv.innerHTML = html;
+            }
+            
+            // Clear the cart after showing success so they don't buy twice!
+            localStorage.removeItem('emmanuel_cart');
+        });
+        document.addEventListener('DOMContentLoaded', () => {
+    const orderId = localStorage.getItem('last_order_id');
+    const cart = JSON.parse(localStorage.getItem('emmanuel_cart')) || []; // Note: In success.html we clear this AFTER showing it
+    
+    const date = new Date().toLocaleDateString();
+    
+    if (orderId) {
+        document.getElementById('receipt-id').innerText = orderId;
+        document.getElementById('receipt-date').innerText = date;
+        
+        let itemsHTML = "";
+        let total = 0;
+        
+        cart.forEach(item => {
+            const itemTotal = item.price * item.quantity;
+            total += itemTotal;
+            itemsHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                            <span>${item.name} (x${item.quantity})</span>
+                            <span>£${itemTotal.toFixed(2)}</span>
+                          </div>`;
+        });
+        
+        document.getElementById('receipt-items').innerHTML = itemsHTML;
+        document.getElementById('receipt-total-amount').innerText = "£" + total.toFixed(2);
+    }
+});
+    </script>
+</body>
+</html>

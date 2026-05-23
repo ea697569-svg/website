@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+    // Uncomment the line below to turn on Maintenance Mode
+    // window.location.href = "maintenance.html";
+</script>
+    <script async src="https://cdn.snipcart.com/themes/v3.0.31/default/snipcart.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emmanuel Super Store</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    
+    <nav class="navbar">
+    <div class="logo">Emmanuel <span>Store</span></div>
+    <div class="search-container">
+    <i class="material-icons">search</i>
+    <input type="text" id="search-input" placeholder="Search for products...">
+    <i class="material-icons voice-btn" id="voice-search-btn" title="Search by voice">mic</i>
+</div>
+
+    <ul class="nav-links">
+        <li><a href="index.html">Shop</a></li>
+        <li><a href="product.html">Product</a></li>
+        <a href="track.html" class="standard-link">Track</a>
+        <a href="index.html" class="standard-link"> Shop</a>
+          <a href="contact.html" class="standard-link">Contact Us</a>
+           <a href="you.html" class="standard-link">Check Order Status</a>
+           <a href="mailto:support@superstoreemmanuelstore.com" class="standard-link">Contact Support</a>
+        <li><a href="#" class="cart-btn" onclick="toggleCart(); return false;">
+            <i class="material-icons">shopping_cart</i>
+            Cart (<span id="cart-count">0</span>)
+        </a></li>
+    </ul>
+    
+</nav>
+
+
+
+    
+
+    <section class="hero">
+        <h1>Welcome to Quality Shopping</h1>
+        <p>Find the best deals on premium products.</p>
+    </section>
+
+    <main>
+        <h2 class="section-title" style="text-align:center; margin-top: 20px;">Featured Products</h2>
+        <div class="category-filters">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="electronics">Electronics</button>
+            <button class="filter-btn" data-filter="audio">Audio</button>
+            <button class="filter-btn" data-filter="computers">Computers</button>
+            <button class="filter-btn" data-filter="school-material">School Material</button>
+        </div>
+        
+
+        <div class="product-container">
+            <div class="product-card" data-category="school-material">
+                <img src="image/shopping (2).webp" alt="bottle">
+                <h3 id="product-name">Owala FreeSip</h3>
+                <div class="product-rating">
+                    <span class="stars">★★★★★</span>
+                    <span class="rating-count">(128 reviews)</span>
+                </div>
+                <p class="price">£29.00</p>
+                <button class="add-to-cart" onclick="addToCart('Owala FreeSip', 29.00)">Add to Cart</button>
+                <button onclick="shareProduct()" style="margin-top: 15px; width: 100%; background: #f1f1f1; color: #333; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    
+    <i class="material-icons">share</i> Share with Friends
+</button>
+
+<p id="share-msg" style="display:none; color: var(--primary-green); font-size: 0.8rem; text-align: center; margin-top: 5px;">Link copied to clipboard!</p>
+            </div>
+            <div class="product-card" data-category="school-material">
+    <img src="image/shopping (2).webp" alt="bottle">
+    <h3>Owala FreeSip</h3> <p class="price">£29.00</p>
+    <button class="add-to-cart" onclick="addToCart('Owala FreeSip', 29.00)">Add to Cart</button>
+</div>
+
+            <div class="product-card" data-category="school-material">
+                <img src="image/shopping.webp" alt="Pencil">
+                <h3 id="product-name">Pencil 24 Noris</h3>
+                <div class="product-rating">
+                    <span class="stars">★★★★★</span>
+                    <span class="rating-count">(128 reviews)</span>
+                </div>
+                <p class="price">£5.00</p>
+                <button class="add-to-cart" onclick="addToCart('pencil 24 Noris', 5.00)">Add to Cart</button>
+                        <button onclick="shareProduct()" style="margin-top: 15px; width: 100%; background: #f1f1f1; color: #333; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+    <i class="material-icons">share</i> Share with Friends
+</button>
+            </div>
+            <div class="product-card" data-category="electronics">
+                <img src="image/shopping.webp" alt="Pencil">
+                <h3 id="product-name">Pencil 24 Noris</h3>
+                <div class="product-rating">
+                    <span class="stars">★★★★★</span>
+                    <span class="rating-count">(128 reviews)</span>
+                </div>
+                <p class="price">£5.00</p>
+                <button class="add-to-cart" onclick="addToCart('pencil 24 Noris', 5.00)">Add to Cart</button>
+                        <button onclick="shareProduct()" style="margin-top: 15px; width: 100%; background: #f1f1f1; color: #333; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+    <i class="material-icons">share</i> Share with Friends
+</button>
+            </div>
+
+             <div class="product-card" data-category="electronics">
+                <img src="image/shopping.webp" alt="Pencil">
+                <h3 id="product-name">Pencil 24 Noris</h3>
+                <div class="product-rating">
+                    <span class="stars">★★★★★</span>
+                    <span class="rating-count">(128 reviews)</span>
+                </div>
+                <p class="price">£5.00</p>
+                <button class="add-to-cart" onclick="addToCart('pencil 24 Noris', 5.00)">Add to Cart</button>
+                        <button onclick="shareProduct()" style="margin-top: 15px; width: 100%; background: #f1f1f1; color: #333; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+    <i class="material-icons">share</i> Share with Friends
+</button>
+            </div>
+
+            
+
+           
+    
+
+             <div class="product-card" data-category="school-material">
+                <img src="image/waterbottle.webp" alt="Water Bottle">
+                <h3 id="product-name">Water Bottle</h3>
+                <div class="product-rating">
+                    <span class="stars">★★★★★</span>
+                    <span class="rating-count">(128 reviews)</span>
+                </div>
+                
+                <p class="price">£5.00</p>
+                <button class="add-to-cart" onclick="addToCart('waterbottle', 5.00)">Add to Cart</button>
+                        <button onclick="shareProduct()" style="margin-top: 15px; width: 100%; background: #f1f1f1; color: #333; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+    <i class="material-icons">share</i> Share with Friends
+</button>
+            </div>
+
+
+
+             <div class="product-card" data-category="school-material">
+                <img src="image/waterbottle.webp" alt="Water Bottle">
+                <h3 id="product-name">Water Bottle</h3>
+                <div class="product-rating">
+                    <span class="stars">★★★★★</span>
+                    <span class="rating-count">(128 reviews)</span>
+                </div>
+                
+                <p class="price">£5.00</p>
+                <button class="add-to-cart" onclick="addToCart('waterbottle', 5.00)">Add to Cart</button>
+                        <button onclick="shareProduct()" style="margin-top: 15px; width: 100%; background: #f1f1f1; color: #333; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+    <i class="material-icons">share</i> Share with Friends
+</button>
+            </div>
+
+
+             <div class="product-card" data-category="school-material">
+                <img src="image/waterbottle.webp" alt="Pencil">
+                <h3 id="product-name">Pencil 24 Noris</h3>
+                <div class="product-rating">
+                    <span class="stars">★★★★★</span>
+                    <span class="rating-count">(128 reviews)</span>
+                </div>
+                
+                <p class="price">£5.00</p>
+                <button class="add-to-cart" onclick="addToCart('waterbottle', 5.00)">Add to Cart</button>
+                        <button onclick="shareProduct()" style="margin-top: 15px; width: 100%; background: #f1f1f1; color: #333; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+    <i class="material-icons">share</i> Share with Friends
+</button>
+            </div>
+
+             <div class="product-card" data-category="school-material">
+                <img src="image/waterbottle.webp" alt="waterbottle>
+                <h3 id="product-name">waterbottle </h3>
+                <div class="product-rating">
+                    <span class="stars">★★★★★</span>
+                    <span class="rating-count">(128 reviews)</span>
+                </div>
+                
+                <p class="price">£10.00</p>
+                <button class="add-to-cart" onclick="addToCart('waterbottle', 10.00)">Add to Cart</button>
+                        <button onclick="shareProduct()" style="margin-top: 15px; width: 100%; background: #f1f1f1; color: #333; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+    <i class="material-icons">share</i> Share with Friends
+</button>
+            </div>
+
+               <div class="product-card" data-category="school-material">
+                <img src="image/waterbottle.webp" alt="waterbottle>
+                <h3 id="product-name">waterbottle </h3>
+                <div class="product-rating">
+                    <span class="stars">★★★★★</span>
+                    <span class="rating-count">(128 reviews)</span>
+                </div>
+                
+                <p class="price">£5.00</p>
+                <button class="add-to-cart" onclick="addToCart('waterbottle', 5.00)">Add to Cart</button>
+                        <button onclick="shareProduct()" style="margin-top: 15px; width: 100%; background: #f1f1f1; color: #333; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+    <i class="material-icons">share</i> Share with Friends
+</button>
+            </div>
+
+
+            </div>
+
+            <div class="product-card">
+    <a href="product.html?name=Fresh%20Apples&price=2.99&image=apples.jpg" class="product-link">
+        <img src="image/apple.jpeg" alt="Apples">
+        <h3>Fresh Apples</h3>
+        <p>£2.99</p>
+        <span class="view-btn">View Details</span>
+    </a>
+</div>
+
+        <div class="category-dropdown">
+            <button class="filter-btn active">Categories <i class="material-icons">expand_more</i></button>
+            <div class="mega-menu">
+                <div class="mega-sidebar">
+                    <div class="sidebar-item active" onmouseover="showTab('featured')">Featured</div>
+                    <div class="sidebar-item" onmouseover="showTab('electronics')">Electronics</div>
+                    <div class="sidebar-item" onmouseover="showTab('school')">School Material</div>
+                    <div class="sidebar-item" onmouseover="showTab('computers')">Computers</div>
+                    
+                </div>
+                <div class="mega-content">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                        <h3 id="panelTitle" style="margin:0;">All Featured Items</h3>
+                        <div class="mega-search-box">
+                            <i class="material-icons">search</i>
+                            <input type="text" id="megaCategorySearch" placeholder="Search categories..." onkeyup="filterMegaItems()">
+                        </div>
+                    </div>
+                    <div class="mega-grid" id="panelGrid"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <a href="#" onclick="toggleCart(); return false;">
+    Cart (<span id="cart-count">0</span>)
+</a>
+  
+
+    <div id="cart-sidebar" class="cart-sidebar">
+        <div class="cart-header">
+            <h2>Your Cart</h2>
+            <button id="close-cart" onclick="toggleCart()">&times;</button>
+        </div>
+        <div id="cart-items"></div>
+        <div class="cart-footer">
+            <button id="clear-cart-btn" onclick="clearCart()">Clear All Items</button>
+            <hr>
+            <h3>Total: £<span id="cart-total">0.00</span></h3>
+            <button class="checkout-btn" id="checkout-btn" onclick="goToOrderReview()">Checkout</button>
+        </div>
+    </div>
+
+    <button id="backToTop" onclick="scrollToTop()">
+        <i class="material-icons">arrow_upward</i>
+    </button>
+
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3 class="logo">Emmanuel Store</h3>
+                <p>Quality products delivered to your door. Your satisfaction is our priority.</p>
+            </div>
+
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="you.html">Track Order</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Follow Us</h4>
+                <div class="social-icons">
+                    <a href="https://www.facebook.com/EmmanuelAyomide" target="_blank" class="social-btn"><i class="material-icons">facebook</i></a>
+                    <a href="https://www.instagram.com/gtemitope2612024" target="_blank" class="social-btn"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" width="24" alt="instagram"></a>
+                    <a href="https://www.tiktok.com/@emmanuel.ayomide520" target="_blank" class="social-btn">
+                        <img src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png" width="24" alt="tiktok">
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Emmanuel Super Store. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <div id="relatedModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeRelatedModal()">&times;</span>
+            <h3>Shared! You might also like these:</h3>
+            <div class="related-grid" id="relatedGrid">
+                </div>
+        </div>
+    </div> 
+    <div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
+
+<div class="cart-sidebar bottom-drawer" id="cart-sidebar">
+    <div class="cart-header">
+        <div class="header-title">
+            <i class="material-icons">shopping_basket</i>
+            <span>Your Basket</span>
+        </div>
+        <button class="close-drawer" onclick="toggleCart()">
+            <i class="material-icons">expand_more</i>
+        </button>
+    </div>
+    
+    <div id="cart-items">
+        </div>
+
+    <div class="cart-footer">
+        <div class="total-row">
+            <span>Total:</span>
+            <span>£<span id="cart-total">0.00</span></span>
+        </div>
+        <div class="drawer-actions">
+            <button class="clear-btn" onclick="clearCart()">Clear All</button>
+            <button class="checkout-btn" onclick="goToOrderReview()">Checkout</button>
+        </div>
+    </div>
+</div> 
+</body>
+</html>

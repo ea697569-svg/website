@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Checkout - Emmanuel Super Store</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    
+    <style>
+        :root {
+            --primary-green: #27ae60;
+            --dark-text: #2d3436;
+            --light-bg: #f8f9fa;
+            --border: #dfe6e9;
+            --shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--light-bg);
+            margin: 0;
+            padding: 20px;
+            color: var(--dark-text);
+        }
+
+        .checkout-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+        }
+
+        .back-btn {
+            text-decoration: none;
+            color: #636e72;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        h2 { margin-top: 0; display: flex; align-items: center; gap: 10px; }
+
+        .input-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus { border-color: var(--primary-green); box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1); }
+
+        .row { display: flex; gap: 15px; }
+
+        .pay-now-btn {
+            width: 100%;
+            background: var(--primary-green);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+
+        .pay-now-btn:hover { background: #219150; transform: translateY(-2px); }
+
+        .order-summary {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            height: fit-content;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+
+        .total-row {
+            border-top: 2px solid var(--light-bg);
+            margin-top: 15px;
+            padding-top: 15px;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.95);
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 9999;
+        }
+
+        .spinner {
+            width: 50px; height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-green);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        @media (max-width: 768px) {
+            .checkout-container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="checkout-container">
+        <div class="card">
+            <a href="index.html" class="back-btn"><i class="material-icons">arrow_back</i> Back to Shop</a>
+            <h2><i class="material-icons" style="color:var(--primary-green)">security</i> Secure Checkout</h2>
+            
+            <form id="paymentForm" onsubmit="processOrder(event)">
+                <div class="input-group">
+                    <label>Shipping Name</label>
+                    <input type="text" id="cust-name" placeholder="Full Name" required>
+                </div>
+                
+                <div class="input-group">
+                    <label>Delivery Address</label>
+                    <input type="text" id="cust-address" placeholder="123 Street Name, London" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Card Number</label>
+                    <div style="position:relative;">
+                        <input type="text" id="card-number" placeholder="0000 0000 0000 0000" maxlength="16" required>
+                        <i class="material-icons" style="position:absolute; right:10px; top:12px; color:#ccc;">credit_card</i>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="input-group" style="flex:1;">
+                        <label>Expiry Date</label>
+                        <input type="text" id="expiry" placeholder="MM/YY" maxlength="5" required>
+                    </div>
+                    <div class="input-group" style="flex:1;">
+                        <label>CVV</label>
+                        <input type="password" id="cvc" placeholder="***" maxlength="3" required>
+                    </div>
+                </div>
+               <div class="input-group" style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+    <input type="checkbox" id="save-info" style="width: auto; cursor: pointer;">
+    <label for="save-info" style="margin-bottom: 0; cursor: pointer; font-weight: normal;">Save shipping info for my next order</label>
+</div>
+                <button type="submit" class="pay-now-btn">
+                    <i class="material-icons">lock</i> Pay Securely Now
+                </button>
+            </form>
+        </div>
+
+        <div class="order-summary">
+            <h3>Order Summary</h3>
+            <div id="summary-list"></div>
+            <div class="total-row summary-item">
+                <span>Grand Total</span>
+                <span id="grand-total">£0.00</span>
+            </div>
+            <p style="font-size: 0.75rem; color: #95a5a6; margin-top: 20px; text-align: center;">
+                <i class="material-icons" style="font-size: 12px;">verified</i> SSL Encrypted Payment
+            </p>
+        </div>
+    </div>
+
+    <div id="loadingOverlay" class="overlay">
+        <div class="spinner"></div>
+        <h3 style="margin-top:20px;">Processing Your Payment...</h3>
+        <p>Sending your order to Emmanuel Store...</p>
+    </div>
+
+    <script>
+        const CART_KEY = 'emmanuel_cart';
+        let FINAL_TOTAL = 0;
+        let ITEM_SUMMARY = "";
+           function loadOrder() {
+    // Check for saved info
+    const savedName = localStorage.getItem('pref_name');
+    const savedAddress = localStorage.getItem('pref_address');
+    
+    if (savedName) document.getElementById('cust-name').value = savedName;
+    if (savedAddress) document.getElementById('cust-address').value = savedAddress;
+    
+    // ... rest of your existing loadOrder code ...
+}
+        // 1. LOAD CART ON PAGE START
+        function loadOrder() {
+            const cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
+            const listDiv = document.getElementById('summary-list');
+            const totalSpan = document.getElementById('grand-total');
+            
+            let total = 0;
+            let names = [];
+            listDiv.innerHTML = "";
+
+            if(cart.length === 0) {
+                listDiv.innerHTML = "<p>Your cart is empty.</p>";
+                return;
+            }
+
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                names.push(`${item.name} (x${item.quantity})`);
+                listDiv.innerHTML += `
+                    <div class="summary-item">
+                        <span>${item.name} (x${item.quantity})</span>
+                        <span>£${itemTotal.toFixed(2)}</span>
+                    </div>`;
+            });
+
+            let delivery = total > 50 ? 0 : 5.00;
+            FINAL_TOTAL = (total + delivery).toFixed(2);
+            ITEM_SUMMARY = names.join(", ");
+
+            listDiv.innerHTML += `
+                <div class="summary-item" style="color:#27ae60;">
+                    <span>Delivery</span>
+                    <span>${delivery === 0 ? 'FREE' : '£' + delivery.toFixed(2)}</span>
+                </div>`;
+
+            totalSpan.innerText = `£${FINAL_TOTAL}`;
+        }
+          // Save info if checkbox is checked
+const saveInfo = document.getElementById('save-info').checked;
+if (saveInfo) {
+    localStorage.setItem('pref_name', custName);
+    localStorage.setItem('pref_address', custAddress);
+} else {
+    // Optional: Clear it if they uncheck it
+    localStorage.removeItem('pref_name');
+    localStorage.removeItem('pref_address');
+}
+        // 2. PROCESS FULL ORDER
+        async function processOrder(event) {
+            event.preventDefault();
+
+            // A. VALIDATION (Luhn Check)
+            const cardNum = document.getElementById('card-number').value.replace(/\s+/g, '');
+            if (!luhnCheck(cardNum)) {
+                alert("Invalid card number. Please check your details.");
+                return;
+            }
+
+            // B. SHOW LOADING
+            document.getElementById('loadingOverlay').style.display = 'flex';
+
+            // C. PREPARE DATA
+            const custName = document.getElementById('cust-name').value;
+            const custAddress = document.getElementById('cust-address').value;
+            const orderId = "EST-" + Math.floor(1000 + Math.random() * 9000);
+
+            const sheetyData = {
+                order: {
+                    orderId: orderId,
+                    customerName: custName,
+                    address: custAddress,
+                    total: FINAL_TOTAL,
+                    items: ITEM_SUMMARY,
+                    status: "Order Placed"
+                }
+            };
+
+            // D. SEND TO SHEETY
+            // IMPORTANT: Replace 'your-id' with your actual Sheety ID
+            const sheetyUrl = 'https://api.sheety.co/your-id/emmanuelStore/orders';
+
+            try {
+                const response = await fetch(sheetyUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(sheetyData)
+                });
+
+                if (response.ok) {
+                    // E. SEND LIVE WHATSAPP NOTIFICATION TO YOU
+                    const myNumber = "447342344033"; 
+                    const msg = `🔔 NEW ORDER!\nID: ${orderId}\nName: ${custName}\nTotal: £${FINAL_TOTAL}\nItems: ${ITEM_SUMMARY}`;
+                    window.open(`https://wa.me/${myNumber}?text=${encodeURIComponent(msg)}`, '_blank');
+
+                    // F. CLEAR CART AND REDIRECT
+                    localStorage.removeItem(CART_KEY);
+                    alert("Payment Successful! Your order ID is " + orderId);
+                    window.location.href = `track.html?id=${orderId}`;
+                } else {
+                    alert("Database Error. Check Sheety URL.");
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                }
+            } catch (err) {
+                alert("Connection failed.");
+                document.getElementById('loadingOverlay').style.display = 'none';
+            }
+        }
+
+        // LUHN ALGORITHM FOR SECURITY
+        function luhnCheck(val) {
+            let sum = 0;
+            for (let i = 0; i < val.length; i++) {
+                let intVal = parseInt(val.substr(i, 1));
+                if (i % 2 == val.length % 2) {
+                    intVal *= 2;
+                    if (intVal > 9) intVal -= 9;
+                }
+                sum += intVal;
+            }
+            return sum % 10 == 0;
+        }
+
+        window.onload = loadOrder;
+    </script>
+</body>
+</html>

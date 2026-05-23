@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>SwiftCart | Cash on Delivery</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: linear-gradient(145deg, #e9eff5 0%, #dce3ec 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    /* main card container */
+    .payment-card {
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(0px);
+      max-width: 440px;
+      width: 100%;
+      border-radius: 2rem;
+      box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.25), 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      overflow: hidden;
+    }
+
+    .card-inner {
+      padding: 2rem 1.8rem 2.2rem;
+    }
+
+    /* form & success shared elements */
+    h2 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+      background: linear-gradient(135deg, #1F2A3A, #2C3E50);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    .subhead {
+      color: #5b6e8c;
+      font-size: 0.9rem;
+      margin-bottom: 1.8rem;
+      border-left: 3px solid #f5b042;
+      padding-left: 0.75rem;
+    }
+
+    .input-group {
+      margin-bottom: 1.2rem;
+      text-align: left;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #2c3e66;
+      margin-bottom: 0.4rem;
+    }
+
+    .input-box {
+      width: 100%;
+      padding: 0.9rem 1rem;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 1.2rem;
+      font-size: 1rem;
+      background-color: #ffffff;
+      transition: all 0.2s;
+      font-family: inherit;
+      outline: none;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    }
+
+    .input-box:focus {
+      border-color: #f5b042;
+      box-shadow: 0 0 0 3px rgba(245, 176, 66, 0.2);
+    }
+
+    /* delivery highlight */
+    .cod-badge {
+      background: #fef5e8;
+      border-radius: 1rem;
+      padding: 0.8rem 1rem;
+      margin: 1.2rem 0 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid #ffe1b3;
+    }
+
+    .cod-badge span:first-child {
+      font-size: 1.8rem;
+    }
+
+    .cod-badge .cod-text {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #b45f1b;
+    }
+
+    .cod-badge .cod-text strong {
+      font-weight: 800;
+      display: block;
+      font-size: 1rem;
+    }
+
+    #pay-button {
+      width: 100%;
+      padding: 1rem;
+      background: #1f2937;
+      border: none;
+      border-radius: 2rem;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      margin-top: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+    }
+
+    #pay-button:hover:not(:disabled) {
+      background: #f5a623;
+      transform: scale(1.01);
+      box-shadow: 0 12px 20px -8px rgba(245, 166, 35, 0.4);
+    }
+
+    #pay-button:disabled {
+      background: #9aa9bb;
+      cursor: default;
+      opacity: 0.7;
+      transform: none;
+    }
+
+    /* success state (cash after delivery confirmation) */
+    #success-state {
+      display: none;
+      opacity: 0;
+      transform: translateY(25px);
+      transition: all 0.55s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      text-align: center;
+    }
+
+    .success-icon {
+      width: 85px;
+      height: 85px;
+      background: #28a745;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.2rem;
+      font-size: 2.8rem;
+      color: white;
+      box-shadow: 0 10px 20px -5px rgba(40, 167, 69, 0.4);
+    }
+
+    .cash-note {
+      background: #fef9e6;
+      padding: 1rem;
+      border-radius: 1.2rem;
+      margin: 1.2rem 0 1rem;
+      border-left: 5px solid #f5b042;
+      font-weight: 500;
+      color: #6b4c1a;
+    }
+
+    .done-btn {
+      background: #2c3e50;
+      padding: 0.9rem;
+      border-radius: 2rem;
+      font-weight: 600;
+      border: none;
+      color: white;
+      width: 100%;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-size: 1rem;
+    }
+
+    .done-btn:hover {
+      background: #1f2c38;
+    }
+
+    /* utility classes */
+    .hidden {
+      display: none !important;
+    }
+
+    .visible {
+      display: block !important;
+      opacity: 1 !important;
+      transform: translateY(0) !important;
+    }
+
+    /* simple loader spinner */
+    .spinner {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    hr {
+      margin: 1rem 0;
+      border: 0;
+      height: 1px;
+      background: #e9edf2;
+    }
+
+    footer {
+      font-size: 0.7rem;
+      text-align: center;
+      color: #7c8ba0;
+      margin-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+    <div class="checkout-container">
+        <div class="card">
+            <a href="index.html" class="back-btn"><i class="material-icons">arrow_back</i> Back to Shop</a>
+            <h2><i class="material-icons" style="color:var(--primary-green)">security</i> Secure Checkout</h2>
+<div class="payment-card" id="main-card">
+  <div class="card-inner">
+    <!-- ========== FORM STATE: Cash on Delivery checkout ========== -->
+    <div id="payment-form">
+      <h2>📦 Complete order</h2>
+      <div class="subhead">Pay after delivery — cash on doorstep</div>
+
+      <!-- Customer details (basic validation demo) -->
+      <div class="input-group">
+        <label>Full name</label>
+        <input type="text" class="input-box" id="fullName" placeholder="John Carter" autocomplete="name">
+      </div>
+
+      <div class="input-group">
+        <label>Delivery address</label>
+        <input type="text" class="input-box" id="address" placeholder="Street, City, Postal code" autocomplete="shipping address-line1">
+      </div>
+
+      <div class="input-group">
+        <label>Phone number</label>
+        <input type="tel" class="input-box" id="phone" placeholder="+1 234 567 8900" autocomplete="tel">
+      </div>
+
+      <!-- CASH ON DELIVERY explicit badge & instruction -->
+      <div class="cod-badge">
+        <span>💵🚚</span>
+        <div class="cod-text">
+          <strong>Payment: Cash on delivery</strong>
+          You will pay in cash when your order arrives at your doorstep.
+        </div>
+      </div>
+
+      <!-- order summary mock -->
+      <div style="display: flex; justify-content: space-between; font-weight: 500; margin: 0.5rem 0 0.2rem;">
+        <span>Subtotal</span>
+        <span>$25.00</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #527a3b;">
+        <span>Delivery (COD)</span>
+        <span>Free</span>
+      </div>
+      <hr>
+      <div style="display: flex; justify-content: space-between; font-weight: 800; font-size: 1.2rem;">
+        <span>Total to pay (cash)</span>
+        <span>$25.00</span>
+      </div>
+
+      <button id="pay-button" onclick="processCashOnDelivery()">
+        💵 Confirm COD order
+      </button>
+      <footer>No card required • Pay cash at delivery</footer>
+    </div>
+
+    <!-- ========== SUCCESS STATE: "Payment will be cash after delivery" message ========== -->
+    <div id="success-state">
+      <div class="success-icon">
+        🚚✨
+      </div>
+      <h2 style="font-size: 1.7rem; margin-bottom: 0.2rem;">Order confirmed!</h2>
+      <p style="color: #3c5a7d; margin-bottom: 0.5rem;">Your order is being prepared.</p>
+      
+      <div class="cash-note">
+        <strong>💵 Payment method: Cash on delivery</strong><br>
+        Please keep <strong>$25.00 in cash</strong> ready. You'll pay when our courier delivers your package.
+      </div>
+      
+      <div style="background: #f0f4fa; border-radius: 1rem; padding: 0.8rem; margin: 1rem 0; text-align: left;">
+        <span style="font-weight: 600;">📦 Delivery summary:</span><br>
+        <span id="summaryName" style="font-size: 0.9rem;">—</span><br>
+        <span id="summaryAddr" style="font-size: 0.9rem;">—</span>
+      </div>
+      
+      <button class="done-btn" onclick="resetToCheckout()">
+        ✅ Done — back to shop
+      </button>
+      <footer style="margin-top: 1rem;">Cash payment collected upon arrival</footer>
+    </div>
+  </div>
+</div>
+
+<script>
+  // helper: get DOM elements
+  const formDiv = document.getElementById('payment-form');
+  const successDiv = document.getElementById('success-state');
+  const payBtn = document.getElementById('pay-button');
+
+  // Input fields
+  const nameInput = document.getElementById('fullName');
+  const addressInput = document.getElementById('address');
+  const phoneInput = document.getElementById('phone');
+
+  // For dynamic summary inside success card
+  const summaryNameSpan = document.getElementById('summaryName');
+  const summaryAddrSpan = document.getElementById('summaryAddr');
+
+  // Function to validate basic fields (non-empty for demo)
+  function validateCheckoutFields() {
+    const name = nameInput ? nameInput.value.trim() : '';
+    const address = addressInput ? addressInput.value.trim() : '';
+    const phone = phoneInput ? phoneInput.value.trim() : '';
+    
+    let missing = [];
+    if (!name) missing.push('Full name');
+    if (!address) missing.push('Delivery address');
+    if (!phone) missing.push('Phone number');
+    
+    if (missing.length > 0) {
+      alert(`❗ Please fill in: ${missing.join(', ')} to confirm Cash on Delivery order.`);
+      return false;
+    }
+    // simple phone regex (any non-empty + at least 5 digits approximate)
+    const phoneDigits = phone.replace(/[\s\-\(\)\+]/g, '');
+    if (phoneDigits.length < 5) {
+      alert('📞 Please enter a valid phone number for delivery contact.');
+      return false;
+    }
+    return true;
+  }
+
+  // Main function: process "Cash on delivery" order confirmation
+  // This simulates placing order, and then shows success interface
+  // with explicit note that payment is cash after delivery.
+  function processCashOnDelivery() {
+    // 1. validate delivery info (COD still requires address/name/phone for demo)
+    if (!validateCheckoutFields()) {
+      return;   // stop if validation fails
+    }
+
+    // 2. Get data for summary preview
+    const customerName = nameInput.value.trim();
+    const deliveryAddress = addressInput.value.trim();
+    const customerPhone = phoneInput.value.trim();
+
+    // 3. Show "processing" state on button (simulate order placement)
+    const originalBtnText = payBtn.innerHTML;
+    payBtn.innerHTML = '<span class="spinner"></span> Placing COD order...';
+    payBtn.disabled = true;
+
+    // 4. Simulate network / order processing delay (1.5 seconds)
+    //    After that, transition to success state with "cash after delivery" message
+    setTimeout(() => {
+      // Update the success card summary fields (so user sees their delivery details)
+      if (summaryNameSpan && summaryAddrSpan) {
+        summaryNameSpan.innerHTML = `👤 ${customerName} &nbsp;| 📞 ${customerPhone}`;
+        summaryAddrSpan.innerHTML = `📍 ${deliveryAddress}`;
+      } else {
+        // fallback
+        if (summaryNameSpan) summaryNameSpan.innerText = `${customerName} | ${customerPhone}`;
+        if (summaryAddrSpan) summaryAddrSpan.innerText = deliveryAddress;
+      }
+
+      // Hide the payment form with elegant transition
+      formDiv.classList.add('hidden');
+      
+      // Ensure success div is ready and apply visible class (triggers fade + slide)
+      // Before showing, we make sure success-state is not hidden but display block via visible class.
+      successDiv.classList.remove('hidden');   // ensures it's not display: none (but we rely on .visible)
+      // Use a tiny forced reflow to make animation smooth
+      void successDiv.offsetWidth;
+      successDiv.classList.add('visible');
+      
+      // Also reset button state after transition (but form is hidden, no problem)
+      // Not necessary to re-enable pay button because form is hidden now.
+    }, 1500); // 1.5 sec delay - feels like order confirmation, payment method is COD
+  }
+
+  // Reset function: reload the checkout view while keeping the same page flow
+  // This allows user to "place another order" or go back to shopping without full page reload.
+  function resetToCheckout() {
+    // Hide success state with animation removal
+    successDiv.classList.remove('visible');
+    // After transition ends, set display none properly and show form
+    const onTransitionEnd = () => {
+      successDiv.classList.add('hidden');
+      // Reset form fields (optional clear or keep values? we'll keep them to avoid refilling but you can reset)
+      // We'll also re-enable pay button and reset its text
+      payBtn.innerHTML = '💵 Confirm COD order';
+      payBtn.disabled = false;
+      
+      // Clear any potential error styles, show form again
+      formDiv.classList.remove('hidden');
+      
+      // Optionally clear the success summary dynamic fields but not necessary
+      // also ensure any leftover transitions
+      successDiv.removeEventListener('transitionend', onTransitionEnd);
+    };
+    
+    successDiv.addEventListener('transitionend', onTransitionEnd, { once: true });
+    // fallback: if transition never fires (edge case)
+    setTimeout(() => {
+      if (successDiv.classList.contains('visible')) {
+        // still visible? force cleanup
+        successDiv.classList.remove('visible');
+        successDiv.classList.add('hidden');
+        formDiv.classList.remove('hidden');
+        payBtn.innerHTML = '💵 Confirm COD order';
+        payBtn.disabled = false;
+      }
+    }, 400);
+  }
+
+  // Additional live UX: prevent accidental enter key submit on form? not needed, but add minor guard
+  // Allow users to press enter on any field to trigger COD order (convenience)
+  const inputFields = [nameInput, addressInput, phoneInput];
+  inputFields.forEach(field => {
+    if (field) {
+      field.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          // only if the form is visible and button enabled
+          if (formDiv && !formDiv.classList.contains('hidden') && payBtn && !payBtn.disabled) {
+            processCashOnDelivery();
+          }
+        }
+      });
+    }
+  });
+
+  // Edge case: if someone tries to click on pay button while already processing? handled by disabled attr.
+  // Also set initial state: ensure success state is hidden and form is visible.
+  window.addEventListener('DOMContentLoaded', () => {
+    // Guarantee correct initial state (in case of any residual)
+    formDiv.classList.remove('hidden');
+    successDiv.classList.remove('visible');
+    successDiv.classList.add('hidden');
+    if (payBtn) {
+      payBtn.disabled = false;
+      payBtn.innerHTML = '💵 Confirm COD order';
+    }
+    // optional: prefill demo data for better UX (example default values but not mandatory)
+    if (nameInput && !nameInput.value) nameInput.value = 'Alex Johnson';
+    if (addressInput && !addressInput.value) addressInput.value = '42 Maple Street, Downtown';
+    if (phoneInput && !phoneInput.value) phoneInput.value = '+1 555 321 9876';
+  });
+</script>
+</body>
+</html>

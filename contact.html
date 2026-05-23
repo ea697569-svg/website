@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emmanuel Super Store | Contact</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* FAQ Styling */
+        .faq-answer { display: none; padding: 10px; background: #f9f9f9; border-radius: 5px; margin-bottom: 10px; }
+        .faq-question { width: 100%; text-align: left; padding: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border: 1px solid #eee; background: #fff; margin-bottom: 5px; }
+        
+        /* Image Preview Styling */
+        #wa-preview { width: 100%; max-height: 200px; object-fit: contain; border-radius: 8px; margin-top: 10px; display: none; border: 2px solid #25d366; }
+        
+        /* Success Bubble */
+        #result { display: none; margin-top: 20px; padding: 20px; background: #dcf8c6; border-radius: 10px; text-align: center; position: relative; border: 1px solid #c7e9a9; }
+        .tick-icon { color: #34b7f1; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<header>
+    <nav class="navbar" style="display: flex; align-items: center; padding: 15px 5%; background: #fff; border-bottom: 1px solid #eee;">
+        <div class="logo" style="font-weight: bold; font-size: 1.2rem; flex-grow: 1;">
+            <a href="index.html" style="text-decoration: none; color: black;">Emmanuel Super Store</a>
+        </div>
+        <ul style="list-style: none; display: flex; gap: 20px; margin: 0;">
+            <li><a href="index.html" style="text-decoration: none; color: #000; display: flex; align-items: center; gap: 5px;"><i class="material-icons">home</i> Home</a></li>
+            <li><a href="index.html#shop" style="text-decoration: none; color: #000;">Shop</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    <section class="contact-section" id="contact" style="padding: 40px 0;">
+        <div class="container" style="max-width: 800px; margin: auto; padding: 0 20px;">
+            <h2 class="section-title" style="text-align:center; margin-bottom: 30px;">Contact Us</h2>
+            
+            <div class="contact-wrapper">
+                <div class="contact-info" style="margin-bottom: 30px; display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px;">
+                    <div class="info-item" style="text-align: center;"><i class="material-icons">email</i><p>support@emmanuelstore.com</p></div>
+                    <div class="info-item" style="text-align: center;"><i class="material-icons">location_on</i><p>21 Collingwood, Bromley, UK</p></div>
+                    <div class="info-item" style="text-align: center;"><i class="material-icons">schedule</i><p>Mon - Sat: 9:00 AM - 6:00 PM</p></div>
+                </div>
+
+                <section class="faq-section">
+                    <h3 style="text-align:center; margin-bottom: 20px;">Frequently Asked Questions</h3>
+                    <div class="faq-container">
+                        <div class="faq-item">
+                            <button class="faq-question" onclick="toggleFAQ(this)">How long does shipping take? <i class="material-icons">expand_more</i></button>
+                            <div class="faq-answer"><p>Standard shipping usually takes 3-5 business days.</p></div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question" onclick="toggleFAQ(this)">What is your return policy? <i class="material-icons">expand_more</i></button>
+                            <div class="faq-answer"><p>We offer a 30-day money-back guarantee.</p></div>
+                        </div>
+                    </div>
+                </section>
+
+                <hr style="margin: 40px 0; border: 0; border-top: 1px solid #eee;">
+
+                <audio id="wa-sound" src="https://raw.githubusercontent.com/Arun-S-Prasad/WhatsApp-Clone-React/master/src/assets/whatsapp_notification.mp3" preload="auto"></audio>
+
+                <form class="contact-form" id="contactForm" enctype="multipart/form-data">
+                    <input type="hidden" name="Order_Items" id="hiddenCartInput">
+                    <input type="hidden" name="cart_contents" id="hiddenCartInput">
+                    <input type="hidden" name="access_key" value="01ecad6d-4137-4c25-97a1-c45e507b7df8">
+                    <input type="hidden" name="from_name" value="Emmanuel Super Store">
+                    
+                    <input type="text" name="name" placeholder="Your Name" style="width:100%; padding:12px; margin-bottom:15px; border:1px solid #ddd; border-radius:5px;" required>
+                    <input type="email" name="email" placeholder="Your Email" style="width:100%; padding:12px; margin-bottom:15px; border:1px solid #ddd; border-radius:5px;" required>
+                    
+                    <label style="font-weight: bold; font-size: 0.9rem;">Upload Order Screenshot:</label>
+                    <input type="file" name="attachment" accept="image/*" id="wa-file" onchange="previewImage()" style="width:100%; margin:10px 0 20px 0;">
+                    
+                    <img id="wa-preview" src="" alt="Preview">
+
+                    <textarea name="message" placeholder="How can we help you?" rows="5" style="width:100%; padding:12px; margin-bottom:15px; border:1px solid #ddd; border-radius:5px;" required></textarea>
+                    
+                    <button type="submit" id="submitBtn" style="background: #25d366; color: white; width: 100%; padding: 15px; cursor: pointer; border: none; border-radius: 5px; font-weight: bold; font-size: 1rem;">
+                        Send Message
+                    </button>
+                </form>
+
+                <div id="result">
+                    <h3 style="color: #075e54; margin: 0;">✔ Order Received</h3>
+                    <p style="margin: 10px 0;">Message sent to Emmanuel. Check your email for a reply soon! <span class="tick-icon">✔✔</span></p>
+                    <span id="time-stamp" style="font-size: 0.7rem; color: #666; display: block; text-align: right;"></span>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script>
+    // FAQ Toggle
+    function toggleFAQ(button) {
+        const answer = button.nextElementSibling;
+        const icon = button.querySelector('.material-icons');
+        if (answer.style.display === "block") {
+            answer.style.display = "none";
+            icon.innerText = "expand_more";
+        } else {
+            answer.style.display = "block";
+            icon.innerText = "expand_less";
+        }
+    }
+
+    // Image Preview
+    function previewImage() {
+        const file = document.getElementById('wa-file').files[0];
+        const preview = document.getElementById('wa-preview');
+        const reader = new FileReader();
+        reader.onloadend = () => { preview.src = reader.result; preview.style.display = 'block'; }
+        if (file) { reader.readAsDataURL(file); }
+    }
+
+    // Form Submission
+    const contactForm = document.getElementById('contactForm');
+    const result = document.getElementById('result');
+    const waSound = document.getElementById('wa-sound');
+
+    contactForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('submitBtn');
+        const formData = new FormData(contactForm);
+        
+        btn.innerText = "Sending...";
+        btn.disabled = true;
+
+        fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            body: formData
+        })
+        .then(async (response) => {
+            if (response.status == 200) {
+                waSound.play(); // Play WhatsApp "Ding"
+                
+                // Set WhatsApp Time
+                const now = new Date();
+                document.getElementById('time-stamp').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                contactForm.style.display = "none";
+                result.style.display = "block";
+            } else {
+                alert("Something went wrong. Please check your Access Key.");
+                btn.innerText = "Send Message";
+                btn.disabled = false;
+            }
+        })
+        .catch(error => {
+            alert("Internet Error. Please try again.");
+            btn.innerText = "Send Message";
+            btn.disabled = false;
+        });
+    });
+    contactForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    // 1. Grab the cart items
+    const cart = JSON.parse(localStorage.getItem('emmanuel_cart')) || [];
+    
+    // 2. Format the items into a clean list for your email
+    const orderList = cart.map(item => 
+        `${item.name} (Qty: ${item.quantity}) - £${(item.price * item.quantity).toFixed(2)}`
+    ).join('\n');
+    
+    // 3. Put the list into that hidden input you just added
+    document.getElementById('hiddenCartInput').value = orderList;
+
+    const formData = new FormData(contactForm);
+    
+    // Now send everything to Web3Forms...
+    fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: formData
+    })
+    .then(async (response) => {
+        if (response.status == 200) {
+            waSound.play();
+            // Optional: Clear the cart so they don't buy the same thing twice
+            localStorage.removeItem('emmanuel_cart'); 
+            contactForm.style.display = "none";
+            result.style.display = "block";
+        }
+    });
+});
+// Function to validate email format
+function validateEmail(email) {
+    // This pattern checks for: text + @ + text + . + text
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+}
+
+// Add this to your payment or contact form logic
+const emailInput = document.getElementById('user-email');
+const emailError = document.getElementById('email-error');
+
+if (emailInput) {
+    emailInput.addEventListener('input', () => {
+        if (validateEmail(emailInput.value)) {
+            emailInput.style.borderColor = "#27ae60"; // Green for correct
+            emailError.style.display = "none";
+        } else {
+            emailInput.style.borderColor = "#e74c3c"; // Red for wrong
+            emailError.style.display = "block";
+        }
+    });
+}
+function checkEmailTypos(email) {
+    const commonTypos = {
+        "gmal.com": "gmail.com",
+        "yaho.com": "yahoo.com",
+        "hotmal.com": "hotmail.com",
+        "outlok.com": "outlook.com"
+    };
+
+    for (let typo in commonTypos) {
+        if (email.includes(typo)) {
+            alert(`Did you mean ${email.replace(typo, commonTypos[typo])}?`);
+        }
+    }
+}
+    
+</script>
+</body>
+</html>
